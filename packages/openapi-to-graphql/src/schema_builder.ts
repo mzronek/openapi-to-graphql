@@ -44,7 +44,7 @@ import * as Oas3Tools from './oas_3_tools'
 import { getResolver, OPENAPI_TO_GRAPHQL } from './resolver_builder'
 import { createDataDef } from './preprocessor'
 import debug from 'debug'
-import { handleWarning, sortObject, MitigationTypes } from './utils'
+import { handleWarning, sortObject, MitigationTypes, mitigations } from './utils'
 import crossFetch from 'cross-fetch'
 
 type GetArgsParams<TSource, TContext, TArgs> = {
@@ -599,7 +599,7 @@ function createOrReuseEnum<TSource, TContext, TArgs>({
         )
       }
 
-      const emumValue =
+      const mappedValue =
         extensionEnumValue ||
         Oas3Tools.sanitize(
           enumValueString,
@@ -607,7 +607,7 @@ function createOrReuseEnum<TSource, TContext, TArgs>({
             ? Oas3Tools.CaseStyle.ALL_CAPS
             : Oas3Tools.CaseStyle.simple
         )
-
+       
       if (extensionEnumValue in values) {
         throw new Error(
           `Cannot create enum value "${extensionEnumValue}".\nYou ` +
@@ -616,7 +616,16 @@ function createOrReuseEnum<TSource, TContext, TArgs>({
             `conflicts with another value "${extensionEnumValue}".`
         )
       }
-      values[emumValue] = { value: enumValue }
+
+      if (!extensionEnumValue && data.options.simpleEnumValues && mappedValue !== enumValueString) {
+        data.options.report.warnings.push({
+          type: MitigationTypes.ENUM_VALUE_CHANGED,
+          message: `${def.preferredName}: Enum value was automatically mapped ${enumValueString} (${typeof enumValueString}) => ${mappedValue} (${typeof mappedValue})`,
+          mitigation: mitigations[MitigationTypes.ENUM_VALUE_CHANGED]
+        });
+      }
+
+      values[mappedValue] = { value: enumValue }
     })
 
     // Store newly created Enum Object Type

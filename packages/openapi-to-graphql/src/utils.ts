@@ -33,6 +33,7 @@ export enum MitigationTypes {
   UNSUPPORTED_HTTP_SECURITY_SCHEME = 'UNSUPPORTED_HTTP_SECURITY_SCHEME',
   UNSUPPORTED_JSON_SCHEMA_KEYWORD = 'UNSUPPORTED_JSON_SCHEMA_KEYWORD',
   CALLBACKS_MULTIPLE_OPERATION_OBJECTS = 'CALLBACKS_MULTIPLE_OPERATION_OBJECTS',
+  ENUM_VALUE_CHANGED = 'ENUM_VALUE_CHANGED',
 
   // Links
   AMBIGUOUS_LINK = 'AMBIGUOUS_LINK',
@@ -82,6 +83,7 @@ export const mitigations: { [mitigationType in MitigationTypes]: string } = {
   UNSUPPORTED_HTTP_SECURITY_SCHEME: 'Ignore security scheme.',
   UNSUPPORTED_JSON_SCHEMA_KEYWORD: 'Ignore keyword and continue.',
   CALLBACKS_MULTIPLE_OPERATION_OBJECTS: 'Select arbitrary operation object',
+  ENUM_VALUE_CHANGED: 'Adjust types in your code to the mapped value',
 
   // Links
   AMBIGUOUS_LINK: `Use first occurance of '#/'.`,
