@@ -98,6 +98,13 @@ export type DataDefinition = {
   // The potential name of the GraphQL input object type if it is created
   graphQLInputObjectTypeName: string
 
+
+  // The potential override of the resolveType function if the Graph QL type is union
+  resolveType?: any
+
+  // The field for storing object that describes union type that should be used for respose types
+  unionDefinition?: DataDefinition
+
   // The GraphQL type if it is created
   graphQLType?:
     | GraphQLObjectType
