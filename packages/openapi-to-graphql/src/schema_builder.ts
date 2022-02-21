@@ -42,7 +42,8 @@ import { GraphQLBigInt, GraphQLJSON } from 'graphql-scalars'
 import * as Oas3Tools from './oas_3_tools'
 import { getResolver, OPENAPI_TO_GRAPHQL } from './resolver_builder'
 import { createDataDef } from './preprocessor'
-import debug from 'debug'
+import debugPkg from 'debug'
+const { debug } = debugPkg;
 import { handleWarning, sortObject, MitigationTypes, mitigations } from './utils'
 import crossFetch from 'cross-fetch'
 

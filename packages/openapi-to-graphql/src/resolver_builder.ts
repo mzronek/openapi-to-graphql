@@ -19,7 +19,8 @@ import crossFetch from 'cross-fetch'
 // Imports:
 import * as Oas3Tools from './oas_3_tools'
 import { JSONPath } from 'jsonpath-plus'
-import { debug } from 'debug'
+import debugPkg from 'debug'
+const { debug } = debugPkg;
 import { GraphQLError, GraphQLFieldResolver } from 'graphql'
 import formurlencoded from 'form-urlencoded'
 import { PubSub } from 'graphql-subscriptions'

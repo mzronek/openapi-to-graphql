@@ -26,7 +26,8 @@ import {
 // Imports:
 import { getGraphQLType } from './schema_builder'
 import * as Oas3Tools from './oas_3_tools'
-import debug from 'debug'
+import debugPkg from 'debug'
+const { debug } = debugPkg;
 import { handleWarning, sortObject, MitigationTypes } from './utils'
 import { createDataDef } from './preprocessor'
 import crossFetch from 'cross-fetch'

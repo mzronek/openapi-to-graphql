@@ -1,6 +1,6 @@
 {
   "name": "@mzronek/openapi-to-graphql",
-  "version": "2.5.3",
+  "version": "2.5.6",
   "description": "Generates a GraphQL schema for a given OpenAPI Specification (OAS)",
   "copyright.owner": "IBM Corp.",
   "contributors": [
