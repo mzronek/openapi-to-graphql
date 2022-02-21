@@ -23,7 +23,8 @@ import {
 // Imports:
 import * as Oas3Tools from './oas_3_tools'
 import deepEqual from 'deep-equal'
-import debug from 'debug'
+import debugPkg from 'debug'
+const { debug } = debugPkg;
 import { handleWarning, getCommonPropertyNames, MitigationTypes } from './utils'
 import { GraphQLOperationType } from './types/graphql'
 import { methodToHttpMethod } from './oas_3_tools'

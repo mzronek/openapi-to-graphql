@@ -69,7 +69,8 @@ import { createAndLoadViewer } from './auth_builder'
 import { GraphQLSchemaConfig } from 'graphql/type/schema'
 import { sortObject, handleWarning, MitigationTypes } from './utils'
 import crossFetch from 'cross-fetch'
-import debug from 'debug'
+import debugPkg from 'debug'
+const { debug } = debugPkg;
 const translationLog = debug('translation')
 
 export { Oas2, Oas3, Options }

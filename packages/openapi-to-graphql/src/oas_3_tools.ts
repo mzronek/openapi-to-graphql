@@ -36,10 +36,11 @@ import { InternalOptions } from './types/options'
 // Imports:
 import * as Swagger2OpenAPI from 'swagger2openapi'
 import * as OASValidator from 'oas-validator'
-import debug from 'debug'
+import debugPkg from 'debug'
+const { debug } = debugPkg;
 import { handleWarning, MitigationTypes } from './utils'
 import * as jsonptr from 'json-ptr'
-import * as pluralize from 'pluralize'
+import pluralize from 'pluralize'
 
 // Type definitions & exports:
 export type SchemaNames = {
