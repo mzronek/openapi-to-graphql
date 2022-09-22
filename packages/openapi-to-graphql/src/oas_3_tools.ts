@@ -36,8 +36,7 @@ import { InternalOptions } from './types/options'
 // Imports:
 import * as Swagger2OpenAPI from 'swagger2openapi'
 import * as OASValidator from 'oas-validator'
-import debugPkg from 'debug'
-const { debug } = debugPkg;
+import { debug } from './debug'
 import { handleWarning, MitigationTypes } from './utils'
 import * as jsonptr from 'json-ptr'
 import pluralize from 'pluralize'
@@ -866,7 +865,7 @@ function extractBasePath(
 
   let basePath =
     basePathComponents.length === 0 ||
-    (basePathComponents.length === 1 && basePathComponents[0] === '')
+      (basePathComponents.length === 1 && basePathComponents[0] === '')
       ? '/'
       : basePathComponents.join('/')
 
@@ -971,7 +970,7 @@ export function getRequestSchemaAndNames(
           payloadContentType === 'application/json' ||
           payloadContentType === '*/*' ||
           payloadContentType === 'application/x-www-form-urlencoded' ||
-            payloadContentType === 'multipart/form-data'
+          payloadContentType === 'multipart/form-data'
         ) {
           // Name extracted from a reference, if applicable
           let fromRef: string
@@ -1287,7 +1286,7 @@ export function getParameters(
   if (!isHttpMethod(method)) {
     translationLog(
       `Warning: attempted to get parameters for ${method} ${path}, ` +
-        `which is not an operation.`
+      `which is not an operation.`
     )
     return parameters
   }
@@ -1529,7 +1528,7 @@ export function storeSaneName(
     // TODO: Follow warning model
     translationLog(
       `Warning: '${str}' and '${mapping[saneStr]}' both sanitize ` +
-        `to '${saneStr}' - collision possible. Desanitize to '${str}'.`
+      `to '${saneStr}' - collision possible. Desanitize to '${str}'.`
     )
   }
   mapping[saneStr] = str

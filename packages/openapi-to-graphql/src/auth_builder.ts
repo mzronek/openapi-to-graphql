@@ -26,8 +26,7 @@ import {
 // Imports:
 import { getGraphQLType } from './schema_builder'
 import * as Oas3Tools from './oas_3_tools'
-import debugPkg from 'debug'
-const { debug } = debugPkg;
+import { debug } from './debug'
 import { handleWarning, sortObject, MitigationTypes } from './utils'
 import { createDataDef } from './preprocessor'
 import crossFetch from 'cross-fetch'
@@ -106,15 +105,15 @@ export function createAndLoadViewer<TSource, TContext, TArgs>(
     let viewerName =
       operationType === GraphQLOperationType.Query
         ? Oas3Tools.sanitize(
-            `viewer ${viewerType}`,
-            Oas3Tools.CaseStyle.camelCase
-          )
+          `viewer ${viewerType}`,
+          Oas3Tools.CaseStyle.camelCase
+        )
         : operationType === GraphQLOperationType.Mutation
-        ? Oas3Tools.sanitize(
+          ? Oas3Tools.sanitize(
             `mutation viewer ${viewerType}`,
             Oas3Tools.CaseStyle.camelCase
           )
-        : Oas3Tools.sanitize(
+          : Oas3Tools.sanitize(
             `subscription viewer ${viewerType}`,
             Oas3Tools.CaseStyle.camelCase
           )
@@ -142,8 +141,8 @@ export function createAndLoadViewer<TSource, TContext, TArgs>(
     operationType === GraphQLOperationType.Query
       ? 'viewerAnyAuth'
       : operationType === GraphQLOperationType.Mutation
-      ? 'mutationViewerAnyAuth'
-      : 'subscriptionViewerAnyAuth'
+        ? 'mutationViewerAnyAuth'
+        : 'subscriptionViewerAnyAuth'
 
   // Add the AnyAuth object type to the specified root query object type
   results[anyAuthObjectName] = getViewerAnyAuthOT(
@@ -220,9 +219,9 @@ function getViewerOT<TSource, TContext, TArgs>(
   let description =
     securityType === 'http'
       ? `A viewer that wraps all operations authenticated via security scheme ` +
-        `'${protocolName}', which is of type 'http' '${scheme.def.scheme}'`
+      `'${protocolName}', which is of type 'http' '${scheme.def.scheme}'`
       : `A viewer that wraps all operations authenticated via security scheme ` +
-        `'${protocolName}', which is of type '${securityType}'`
+      `'${protocolName}', which is of type '${securityType}'`
 
   if (data.oass.length !== 1) {
     typeDescription += ` in OAS '${scheme.oas.info.title}'`

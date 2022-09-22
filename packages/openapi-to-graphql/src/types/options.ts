@@ -8,6 +8,7 @@ import { GraphQLOperationType, SubscriptionContext } from './graphql'
 import { GraphQLFieldResolver, GraphQLResolveInfo } from 'graphql'
 import crossFetch from 'cross-fetch'
 import FormData from 'form-data'
+import { DebugOptions } from '../debug'
 
 /**
  * Type definition of the options that users can pass to OpenAPI-to-GraphQL.
@@ -358,6 +359,11 @@ export type InternalOptions<TSource, TContext, TArgs> = {
    * Will forgo the title is only one OAS is provided
    */
   equivalentToMessages: boolean
+
+  /**
+   * Custom log function
+   */
+  debugOptions?: DebugOptions
 
   /**
    * Custom W3 Compatible `fetch` implementation

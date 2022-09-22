@@ -43,8 +43,7 @@ import { GraphQLBigInt, GraphQLJSON } from 'graphql-scalars'
 import * as Oas3Tools from './oas_3_tools'
 import { getResolver, OPENAPI_TO_GRAPHQL } from './resolver_builder'
 import { createDataDef } from './preprocessor'
-import debugPkg from 'debug'
-const { debug } = debugPkg;
+import { debug } from './debug'
 import { handleWarning, sortObject, MitigationTypes, mitigations } from './utils'
 import crossFetch from 'cross-fetch'
 
@@ -263,9 +262,9 @@ function createOrReuseOt<TSource, TContext, TArgs>({
     if (def.graphQLType && typeof def.graphQLType !== 'undefined') {
       translationLog(
         `Reuse object type '${def.graphQLTypeName}'` +
-          (typeof operation === 'object'
-            ? ` (for operation '${operation.operationString}')`
-            : '')
+        (typeof operation === 'object'
+          ? ` (for operation '${operation.operationString}')`
+          : '')
       )
 
       return def.graphQLType as GraphQLObjectType | GraphQLInputObjectType
@@ -279,9 +278,9 @@ function createOrReuseOt<TSource, TContext, TArgs>({
     ) {
       translationLog(
         `Reuse input object type '${def.graphQLInputObjectTypeName}'` +
-          (typeof operation === 'object'
-            ? ` (for operation '${operation.operationString}')`
-            : '')
+        (typeof operation === 'object'
+          ? ` (for operation '${operation.operationString}')`
+          : '')
       )
       return def.graphQLInputObjectType as GraphQLInputObjectType
     }
@@ -296,9 +295,9 @@ function createOrReuseOt<TSource, TContext, TArgs>({
   if (!isInputObjectType) {
     translationLog(
       `Create object type '${def.graphQLTypeName}'` +
-        (typeof operation === 'object'
-          ? ` (for operation '${operation.operationString}')`
-          : '')
+      (typeof operation === 'object'
+        ? ` (for operation '${operation.operationString}')`
+        : '')
     )
 
     def.graphQLType = new GraphQLObjectType({
@@ -323,9 +322,9 @@ function createOrReuseOt<TSource, TContext, TArgs>({
   } else {
     translationLog(
       `Create input object type '${def.graphQLInputObjectTypeName}'` +
-        (typeof operation === 'object'
-          ? ` (for operation '${operation.operationString}')`
-          : '')
+      (typeof operation === 'object'
+        ? ` (for operation '${operation.operationString}')`
+        : '')
     )
 
     def.graphQLInputObjectType = new GraphQLInputObjectType({
@@ -362,17 +361,17 @@ function createOrReuseUnion<TSource, TContext, TArgs>({
   if (typeof def.graphQLType !== 'undefined') {
     translationLog(
       `Reuse union type '${def.graphQLTypeName}'` +
-        (typeof operation === 'object'
-          ? ` (for operation '${operation.operationString}')`
-          : '')
+      (typeof operation === 'object'
+        ? ` (for operation '${operation.operationString}')`
+        : '')
     )
     return def.graphQLType as GraphQLUnionType
   } else {
     translationLog(
       `Create union type '${def.graphQLTypeName}'` +
-        (typeof operation === 'object'
-          ? ` (for operation '${operation.operationString}')`
-          : '')
+      (typeof operation === 'object'
+        ? ` (for operation '${operation.operationString}')`
+        : '')
     )
 
     const schema = def.schema
@@ -558,7 +557,7 @@ function createOrReuseList<TSource, TContext, TArgs>({
   } else {
     throw new Error(
       `Cannot create list item object type '${itemsName}' in list ` +
-        `'${name}' with schema '${JSON.stringify(itemsSchema)}'.`
+      `'${name}' with schema '${JSON.stringify(itemsSchema)}'.`
     )
   }
 }
@@ -594,9 +593,9 @@ function createOrReuseEnum<TSource, TContext, TArgs>({
       if (!Oas3Tools.isSanitized(extensionEnumValue)) {
         throw new Error(
           `Cannot create enum value "${extensionEnumValue}".\nYou ` +
-            `provided "${extensionEnumValue}" in ` +
-            `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.EnumMapping}, but it is not ` +
-            `GraphQL-safe."`
+          `provided "${extensionEnumValue}" in ` +
+          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.EnumMapping}, but it is not ` +
+          `GraphQL-safe."`
         )
       }
 
@@ -608,13 +607,13 @@ function createOrReuseEnum<TSource, TContext, TArgs>({
             ? Oas3Tools.CaseStyle.ALL_CAPS
             : Oas3Tools.CaseStyle.simple
         )
-       
+
       if (extensionEnumValue in values) {
         throw new Error(
           `Cannot create enum value "${extensionEnumValue}".\nYou ` +
-            `provided "${extensionEnumValue}" in ` +
-            `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.EnumMapping}, but it ` +
-            `conflicts with another value "${extensionEnumValue}".`
+          `provided "${extensionEnumValue}" in ` +
+          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.EnumMapping}, but it ` +
+          `conflicts with another value "${extensionEnumValue}".`
         )
       }
 
@@ -685,18 +684,18 @@ function createFields<TSource, TContext, TArgs>({
       if (!Oas3Tools.isSanitized(extensionFieldName)) {
         throw new Error(
           `Cannot create field with name "${extensionFieldName}".\nYou ` +
-            `provided "${extensionFieldName}" in ` +
-            `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
-            `GraphQL-safe."`
+          `provided "${extensionFieldName}" in ` +
+          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
+          `GraphQL-safe."`
         )
       }
 
       if (extensionFieldName && extensionFieldName in fields) {
         throw new Error(
           `Cannot create field with name "${extensionFieldName}".\nYou ` +
-            `provided "${extensionFieldName}" in ` +
-            `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
-            `conflicts with another field named "${extensionFieldName}".`
+          `provided "${extensionFieldName}" in ` +
+          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
+          `conflicts with another field named "${extensionFieldName}".`
         )
       }
 
@@ -812,13 +811,13 @@ function createFields<TSource, TContext, TArgs>({
             linkedOp.responseDefinition.graphQLType !== undefined
               ? linkedOp.responseDefinition.graphQLType
               : (getGraphQLType({
-                  def: linkedOp.responseDefinition,
-                  operation,
-                  data,
-                  iteration: iteration + 1,
-                  isInputObjectType: false,
-                  fetch
-                }) as GraphQLOutputType)
+                def: linkedOp.responseDefinition,
+                operation,
+                data,
+                iteration: iteration + 1,
+                isInputObjectType: false,
+                fetch
+              }) as GraphQLOutputType)
 
           let description = link.description
 
@@ -1369,7 +1368,7 @@ export function getArgs<TSource, TContext, TArgs>({
 
     const reqRequired =
       typeof operation === 'object' &&
-      typeof operation.payloadRequired === 'boolean'
+        typeof operation.payloadRequired === 'boolean'
         ? operation.payloadRequired
         : false
 

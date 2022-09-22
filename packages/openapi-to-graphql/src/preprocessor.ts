@@ -23,8 +23,7 @@ import {
 // Imports:
 import * as Oas3Tools from './oas_3_tools'
 import deepEqual from 'deep-equal'
-import debugPkg from 'debug'
-const { debug } = debugPkg;
+import { debug } from './debug'
 import { handleWarning, getCommonPropertyNames, MitigationTypes } from './utils'
 import { GraphQLOperationType } from './types/graphql'
 import { methodToHttpMethod } from './oas_3_tools'
@@ -115,12 +114,12 @@ function processOperation<TSource, TContext, TArgs>(
     const payloadDefinition =
       payloadSchema && typeof payloadSchema !== 'undefined'
         ? createDataDef(
-            payloadSchemaNames,
-            payloadSchema as SchemaObject,
-            true,
-            data,
-            oas
-          )
+          payloadSchemaNames,
+          payloadSchema as SchemaObject,
+          true,
+          data,
+          oas
+        )
         : undefined
 
     // Links
@@ -295,7 +294,7 @@ export function preprocessOas<TSource, TContext, TArgs>(
           // Option selectQueryOrMutationField can override operation type
           if (
             typeof options?.selectQueryOrMutationField?.[oas.info.title]?.[
-              path
+            path
             ]?.[httpMethod] === 'number'
             // This is an enum, which is an integer value
           ) {
@@ -395,14 +394,14 @@ export function preprocessOas<TSource, TContext, TArgs>(
                       const callbackOperationString =
                         oass.length === 1
                           ? Oas3Tools.formatOperationString(
-                              httpMethod,
-                              callbackName
-                            )
+                            httpMethod,
+                            callbackName
+                          )
                           : Oas3Tools.formatOperationString(
-                              httpMethod,
-                              callbackName,
-                              oas.info.title
-                            )
+                            httpMethod,
+                            callbackName,
+                            oas.info.title
+                          )
 
                       let callbackHttpMethod: Oas3Tools.HTTP_METHODS
 
@@ -705,16 +704,16 @@ export function createDataDef<TSource, TContext, TArgs>(
      * (see createOneOfUnion)
      */
     if (
-      existingDataDef.targetGraphQLType === TargetGraphQLType.oneOfUnion && 
-      Array.isArray(existingDataDef.subDefinitions) 
+      existingDataDef.targetGraphQLType === TargetGraphQLType.oneOfUnion &&
+      Array.isArray(existingDataDef.subDefinitions)
     ) {
       existingDataDef.subDefinitions.forEach((def) => {
-          collapseLinksIntoDataDefinition({
-            additionalLinks: saneLinks,
-            existingDataDef: def,
-            data,
-          })
-        }
+        collapseLinksIntoDataDefinition({
+          additionalLinks: saneLinks,
+          existingDataDef: def,
+          data,
+        })
+      }
       )
     } else {
       collapseLinksIntoDataDefinition({
@@ -742,8 +741,8 @@ export function createDataDef<TSource, TContext, TArgs>(
     saneName = !data.options.simpleNames
       ? Oas3Tools.sanitize(name, Oas3Tools.CaseStyle.PascalCase)
       : Oas3Tools.capitalize(
-          Oas3Tools.sanitize(name, Oas3Tools.CaseStyle.simple)
-        )
+        Oas3Tools.sanitize(name, Oas3Tools.CaseStyle.simple)
+      )
     saneInputName = Oas3Tools.capitalize(saneName + 'Input')
   }
 
@@ -878,8 +877,8 @@ export function createDataDef<TSource, TContext, TArgs>(
       } else {
         throw new Error(
           `OpenAPI-to-GraphQL error: Cannot create object ` +
-            `from anyOf because there is no anyOf in ` +
-            `schema '${JSON.stringify(schemaOrRef, null, 2)}'`
+          `from anyOf because there is no anyOf in ` +
+          `schema '${JSON.stringify(schemaOrRef, null, 2)}'`
         )
       }
       break
@@ -904,8 +903,8 @@ export function createDataDef<TSource, TContext, TArgs>(
       } else {
         throw new Error(
           `OpenAPI-to-GraphQL error: Cannot create union ` +
-            `from oneOf because there is no oneOf in ` +
-            `schema '${JSON.stringify(schemaOrRef, null, 2)}'`
+          `from oneOf because there is no oneOf in ` +
+          `schema '${JSON.stringify(schemaOrRef, null, 2)}'`
         )
       }
       break
@@ -995,7 +994,7 @@ function getSchemaName(
   if (Object.keys(names).length === 1 && typeof names.preferred === 'string') {
     throw new Error(
       `Cannot create data definition without name(s), excluding the ` +
-        `preferred name.`
+      `preferred name.`
     )
   }
 
@@ -1007,18 +1006,18 @@ function getSchemaName(
     if (!Oas3Tools.isSanitized(extensionTypeName)) {
       throw new Error(
         `Cannot create type with name "${extensionTypeName}".\nYou ` +
-          `provided "${extensionTypeName}" in ` +
-          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.TypeName}, but it is not ` +
-          `GraphQL-safe."`
+        `provided "${extensionTypeName}" in ` +
+        `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.TypeName}, but it is not ` +
+        `GraphQL-safe."`
       )
     }
 
     if (usedNames.includes(extensionTypeName)) {
       throw new Error(
         `Cannot create type with name "${extensionTypeName}".\nYou provided ` +
-          `"${names.fromExtension}" in ` +
-          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.TypeName}, but it conflicts ` +
-          `with another type named "${extensionTypeName}".`
+        `"${names.fromExtension}" in ` +
+        `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.TypeName}, but it conflicts ` +
+        `with another type named "${extensionTypeName}".`
       )
     }
 
@@ -1066,12 +1065,12 @@ function getSchemaName(
       typeof names.fromExtension === 'string'
         ? names.fromExtension
         : typeof names.fromRef === 'string'
-        ? names.fromRef
-        : typeof names.fromSchema === 'string'
-        ? names.fromSchema
-        : typeof names.fromPath === 'string'
-        ? names.fromPath
-        : 'PlaceholderName',
+          ? names.fromRef
+          : typeof names.fromSchema === 'string'
+            ? names.fromSchema
+            : typeof names.fromPath === 'string'
+              ? names.fromPath
+              : 'PlaceholderName',
       Oas3Tools.CaseStyle.PascalCase
     )
   }
@@ -1114,19 +1113,19 @@ function sanitizeLinks<TSource, TContext, TArgs>({
       if (!Oas3Tools.isSanitized(extensionFieldName)) {
         throw new Error(
           `Cannot create link field with name ` +
-            `"${extensionFieldName}".\nYou provided "${extensionFieldName}" in ` +
-            `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
-            `GraphQL-safe."`
+          `"${extensionFieldName}".\nYou provided "${extensionFieldName}" in ` +
+          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
+          `GraphQL-safe."`
         )
       }
 
       if (extensionFieldName in saneLinks) {
         throw new Error(
           `Cannot create link field with name ` +
-            `"${extensionFieldName}".\nYou provided ` +
-            `"${extensionFieldName}" in ` +
-            `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
-            `conflicts with another field named "${extensionFieldName}".`
+          `"${extensionFieldName}".\nYou provided ` +
+          `"${extensionFieldName}" in ` +
+          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
+          `conflicts with another field named "${extensionFieldName}".`
         )
       }
 
@@ -1566,7 +1565,7 @@ function createOneOfUnion<TSource, TContext, TArgs>(
       oas,
       def.links
     )
-    ;(def.subDefinitions as DataDefinition[]).push(subDefinition)
+      ; (def.subDefinitions as DataDefinition[]).push(subDefinition)
   })
 
   // Not all member schemas may have been turned into GraphQL member types

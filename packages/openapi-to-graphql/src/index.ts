@@ -69,8 +69,8 @@ import { createAndLoadViewer } from './auth_builder'
 import { GraphQLSchemaConfig } from 'graphql/type/schema'
 import { sortObject, handleWarning, MitigationTypes } from './utils'
 import crossFetch from 'cross-fetch'
-import debugPkg from 'debug'
-const { debug } = debugPkg;
+import { debug, setDebugOptions } from './debug'
+
 const translationLog = debug('translation')
 
 export { Oas2, Oas3, Options }
@@ -144,6 +144,10 @@ export async function createGraphQLSchema<TSource, TContext, TArgs>(
     ...options
   }
 
+  if (options.debugOptions) {
+    setDebugOptions(options.debugOptions);
+  }
+
   if (Array.isArray(spec)) {
     // Convert all non-OAS 3 into OAS 3
     const oass = await Promise.all(
@@ -214,6 +218,7 @@ export function translateOpenAPIToGraphQL<TSource, TContext, TArgs>(
     // Logging options
     provideErrorExtensions,
     equivalentToMessages,
+    debugOptions,
 
     fetch
   }: InternalOptions<TSource, TContext, TArgs>
@@ -256,6 +261,7 @@ export function translateOpenAPIToGraphQL<TSource, TContext, TArgs>(
     // Logging options
     provideErrorExtensions,
     equivalentToMessages,
+    debugOptions,
 
     fetch
   }
@@ -418,23 +424,23 @@ export function translateOpenAPIToGraphQL<TSource, TContext, TArgs>(
     query:
       Object.keys(queryFields).length > 0
         ? new GraphQLObjectType({
-            name: 'Query',
-            fields: queryFields
-          })
+          name: 'Query',
+          fields: queryFields
+        })
         : GraphQLTools.getEmptyObjectType('Query'), // A GraphQL schema must contain a Query object type
     mutation:
       Object.keys(mutationFields).length > 0
         ? new GraphQLObjectType({
-            name: 'Mutation',
-            fields: mutationFields
-          })
+          name: 'Mutation',
+          fields: mutationFields
+        })
         : null,
     subscription:
       Object.keys(subscriptionFields).length > 0
         ? new GraphQLObjectType({
-            name: 'Subscription',
-            fields: subscriptionFields
-          })
+          name: 'Subscription',
+          fields: subscriptionFields
+        })
         : null
   }
 
@@ -482,7 +488,7 @@ function addQueryFields<TSource, TContext, TArgs>({
     singularNames,
     baseUrl,
     requestOptions,
-      fileUploadOptions,
+    fileUploadOptions,
     connectOptions,
     fetch
   } = options
@@ -509,21 +515,21 @@ function addQueryFields<TSource, TContext, TArgs>({
   if (!Oas3Tools.isSanitized(extensionFieldName)) {
     throw new Error(
       `Cannot create query field with name "${extensionFieldName}".\nYou ` +
-        `provided "${extensionFieldName}" in ` +
-        `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
-        `GraphQL-safe."`
+      `provided "${extensionFieldName}" in ` +
+      `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
+      `GraphQL-safe."`
     )
   }
 
   const generatedFieldName = operationIdFieldNames
     ? saneOperationId // Sanitized (generated) operationId
     : singularNames
-    ? Oas3Tools.sanitize(
+      ? Oas3Tools.sanitize(
         // Generated singular name
         Oas3Tools.inferResourceNameFromPath(operation.path),
         Oas3Tools.CaseStyle.camelCase
       )
-    : Oas3Tools.uncapitalize(
+      : Oas3Tools.uncapitalize(
         // Generated type name (to be used as a field name)
         operation.responseDefinition.graphQLTypeName
       )
@@ -559,9 +565,9 @@ function addQueryFields<TSource, TContext, TArgs>({
       ) {
         throw new Error(
           `Cannot create query field with name "${extensionFieldName}".\nYou ` +
-            ` provided "${extensionFieldName}" in ` +
-            `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it conflicts ` +
-            `with another field named "${extensionFieldName}".`
+          ` provided "${extensionFieldName}" in ` +
+          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it conflicts ` +
+          `with another field named "${extensionFieldName}".`
         )
       }
 
@@ -600,9 +606,9 @@ function addQueryFields<TSource, TContext, TArgs>({
     if (extensionFieldName && extensionFieldName in queryFields) {
       throw new Error(
         `Cannot create query field with name "${extensionFieldName}".\nYou ` +
-          `provided "${extensionFieldName}" in ` +
-          `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it conflicts ` +
-          `with another field named "${extensionFieldName}".`
+        `provided "${extensionFieldName}" in ` +
+        `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it conflicts ` +
+        `with another field named "${extensionFieldName}".`
       )
     }
 
@@ -661,7 +667,7 @@ function addMutationFields<TSource, TContext, TArgs>({
     singularNames,
     baseUrl,
     requestOptions,
-      fileUploadOptions,
+    fileUploadOptions,
     connectOptions,
     fetch
   } = options
@@ -688,20 +694,20 @@ function addMutationFields<TSource, TContext, TArgs>({
   if (!Oas3Tools.isSanitized(extensionFieldName)) {
     throw new Error(
       `Cannot create mutation field with name "${extensionFieldName}".\nYou ` +
-        `provided "${extensionFieldName}" in ` +
-        `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
-        `GraphQL-safe."`
+      `provided "${extensionFieldName}" in ` +
+      `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
+      `GraphQL-safe."`
     )
   }
 
   const generatedFieldName = singularNames
     ? Oas3Tools.sanitize(
-        // Generated singular name with HTTP method
-        `${operation.method}${Oas3Tools.inferResourceNameFromPath(
-          operation.path
-        )}`,
-        Oas3Tools.CaseStyle.camelCase
-      )
+      // Generated singular name with HTTP method
+      `${operation.method}${Oas3Tools.inferResourceNameFromPath(
+        operation.path
+      )}`,
+      Oas3Tools.CaseStyle.camelCase
+    )
     : saneOperationId // (Generated) operationId (for mutations, operationId is guaranteed unique)
 
   /**
@@ -732,9 +738,9 @@ function addMutationFields<TSource, TContext, TArgs>({
       ) {
         throw new Error(
           `Cannot create mutation field with name ` +
-            `"${extensionFieldName}".\nYou provided "${extensionFieldName}" ` +
-            `in ${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
-            `conflicts with another field named "${extensionFieldName}".`
+          `"${extensionFieldName}".\nYou provided "${extensionFieldName}" ` +
+          `in ${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
+          `conflicts with another field named "${extensionFieldName}".`
         )
       }
 
@@ -765,9 +771,9 @@ function addMutationFields<TSource, TContext, TArgs>({
     if (extensionFieldName && extensionFieldName in mutationFields) {
       throw new Error(
         `Cannot create mutation field with name ` +
-          `"${extensionFieldName}".\nYou provided "${extensionFieldName}" ` +
-          `in ${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
-          `conflicts with another field named "${extensionFieldName}".`
+        `"${extensionFieldName}".\nYou provided "${extensionFieldName}" ` +
+        `in ${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
+        `conflicts with another field named "${extensionFieldName}".`
       )
     }
 
@@ -834,9 +840,9 @@ function addSubscriptionFields<TSource, TContext, TArgs>({
   if (!Oas3Tools.isSanitized(extensionFieldName)) {
     throw new Error(
       `Cannot create subscription field with name ` +
-        `"${extensionFieldName}".\nYou provided "${extensionFieldName}" in ` +
-        `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
-        `GraphQL-safe."`
+      `"${extensionFieldName}".\nYou provided "${extensionFieldName}" in ` +
+      `${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it is not ` +
+      `GraphQL-safe."`
     )
   }
 
@@ -855,9 +861,9 @@ function addSubscriptionFields<TSource, TContext, TArgs>({
       ) {
         throw new Error(
           `Cannot create subscription field with name ` +
-            `"${extensionFieldName}".\nYou provided "${extensionFieldName}" ` +
-            `in ${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
-            `conflicts with another field named "${extensionFieldName}".`
+          `"${extensionFieldName}".\nYou provided "${extensionFieldName}" ` +
+          `in ${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
+          `conflicts with another field named "${extensionFieldName}".`
         )
       }
 
@@ -887,9 +893,9 @@ function addSubscriptionFields<TSource, TContext, TArgs>({
     if (extensionFieldName && extensionFieldName in subscriptionFields) {
       throw new Error(
         `Cannot create subscription field with name ` +
-          `"${extensionFieldName}".\nYou provided "${extensionFieldName}" ` +
-          `in ${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
-          `conflicts with another field named "${extensionFieldName}".`
+        `"${extensionFieldName}".\nYou provided "${extensionFieldName}" ` +
+        `in ${Oas3Tools.OAS_GRAPHQL_EXTENSIONS.FieldName}, but it ` +
+        `conflicts with another field named "${extensionFieldName}".`
       )
     }
 
